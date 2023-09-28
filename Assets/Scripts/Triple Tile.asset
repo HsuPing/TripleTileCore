@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93288622cb15448aeb76c8a36f891f5f, type: 3}
+  m_Name: Triple Tile
+  m_EditorClassIdentifier: 
+  TileLayers:
+  - Tiles:
+    - Id: 0
+      RowX: 0
+      ColY: 0
+    - Id: 0
+      RowX: 1
+      ColY: 0
+    - Id: 0
+      RowX: 2
+      ColY: 0
+    - Id: 0
+      RowX: 3
+      ColY: 0
+    - Id: 0
+      RowX: 4
+      ColY: 0
+    - Id: 0
+      RowX: 0
+      ColY: 4
+    - Id: 0
+      RowX: 1
+      ColY: 4
+    - Id: 0
+      RowX: 2
+      ColY: 4
+    - Id: 0
+      RowX: 3
+      ColY: 4
+    - Id: 0
+      RowX: 4
+      ColY: 4
+    RowCountX: 5
+    ColCountY: 5
+    MatchCount: 0
+  - Tiles:
+    - Id: 0
+      RowX: 0
+      ColY: 0
+    - Id: 0
+      RowX: 1
+      ColY: 0
+    - Id: 0
+      RowX: 0
+      ColY: 1
+    - Id: 0
+      RowX: 1
+      ColY: 1
+    - Id: 0
+      RowX: 2
+      ColY: 2
+    - Id: 0
+      RowX: 3
+      ColY: 2
+    - Id: 0
+      RowX: 2
+      ColY: 3
+    - Id: 0
+      RowX: 3
+      ColY: 3
+    RowCountX: 4
+    ColCountY: 4
+    MatchCount: 0
+  - Tiles:
+    - Id: 0
+      RowX: 0
+      ColY: 0
+    - Id: 0
+      RowX: 1
+      ColY: 0
+    - Id: 0
+      RowX: 2
+      ColY: 0
+    - Id: 0
+      RowX: 0
+      ColY: 1
+    - Id: 0
+      RowX: 1
+      ColY: 1
+    - Id: 0
+      RowX: 2
+      ColY: 1
+    - Id: 0
+      RowX: 0
+      ColY: 2
+    - Id: 0
+      RowX: 1
+      ColY: 2
+    - Id: 0
+      RowX: 2
+      ColY: 2
+    RowCountX: 3
+    ColCountY: 3
+    MatchCount: 0
