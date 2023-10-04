@@ -3,3 +3,25 @@
     -unity-font-style: bold;
     color: rgb(68, 138, 255);
 }
+
+.slot {
+    width: 75px;
+    height: 75px;
+    margin: 1px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.slot_row {
+    flex-direction: row;
+}
+
+.object {
+    border-radius: 30px;
+}

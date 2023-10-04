@@ -17,10 +17,19 @@
                     <ui:ListView focusable="true" name="ListView" reorderable="true" show-foldout-header="false" show-add-remove-footer="false" show-border="false" fixed-item-height="60" show-alternating-row-backgrounds="None" reorder-mode="Animated" show-bound-collection-size="false" style="width: auto; max-height: none; min-height: auto; flex-grow: 1; flex-direction: column;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="SetTilesPanel" style="flex-grow: 1; width: auto; max-width: none; min-width: auto; border-left-color: rgb(1, 1, 1); border-right-color: rgb(1, 1, 1); border-top-color: rgb(1, 1, 1); border-bottom-color: rgb(1, 1, 1); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; height: auto; justify-content: flex-start; display: flex; min-height: auto;">
-                <ui:VisualElement name="InfoPanel" style="flex-grow: 0; height: 50px; justify-content: flex-start; flex-direction: row; align-items: center; display: none; margin-right: 0; margin-left: 10px; margin-top: 0; margin-bottom: 0; align-self: auto;">
+            <ui:VisualElement name="SetTilesPanel" style="flex-grow: 1; width: auto; max-width: none; min-width: auto; border-left-color: rgb(1, 1, 1); border-right-color: rgb(1, 1, 1); border-top-color: rgb(1, 1, 1); border-bottom-color: rgb(1, 1, 1); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 1px; height: auto; justify-content: flex-start; display: flex; min-height: auto; flex-direction: column;">
+                <ui:VisualElement name="InfoPanel" style="flex-grow: 0; height: 50px; justify-content: flex-start; flex-direction: row; align-items: center; display: flex; margin-right: 0; margin-left: 10px; margin-top: 0; margin-bottom: 0; align-self: auto;">
                     <ui:IntegerField label="行(橫)數量" value="5" name="RowCountField" style="flex-shrink: 1; justify-content: center; align-items: flex-start; align-self: auto; width: 120px; overflow: hidden; flex-direction: column; flex-wrap: nowrap; -unity-text-align: upper-left; text-shadow: 0 0 0 rgba(0, 0, 0, 0); flex-grow: 0; margin-top: 0; margin-bottom: 0; height: auto;" />
                     <ui:IntegerField label="列(直)數量" value="5" name="ColCountField" style="flex-shrink: 1; width: 120px; align-items: flex-start; justify-content: flex-start; flex-direction: column; margin-left: 20px; margin-top: 0; margin-bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="TilesPanel" style="flex-grow: 1;">
+                    <ui:ScrollView mode="Horizontal" vertical-scroller-visibility="Hidden" name="slots" style="height: 80px; overflow: visible; visibility: visible; padding-top: 0; padding-right: 10px; padding-left: 10px;">
+                        <ui:VisualElement name="slot" class="slot" />
+                        <ui:VisualElement name="slot" class="slot" />
+                        <ui:VisualElement name="slot" class="slot" />
+                    </ui:ScrollView>
+                    <ui:ScrollView name="TilesScrollPanel" mode="VerticalAndHorizontal" style="flex-grow: 1; align-items: stretch; justify-content: center; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; align-self: auto;" />
+                    <ui:VisualElement name="object" class="object" style="position: absolute; width: 50px; height: 50px; background-color: rgb(0, 0, 0);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

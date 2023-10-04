@@ -5,16 +5,23 @@ using UnityEditor.UIElements;
 using System.Collections.Generic;
 using System.Linq;
 
-
 public class TripleTileGameDesginEditorWindow : EditorWindow
 {
     private class TileLayers
     {
-        public List<TileLayer> Layers; 
+        public List<TileLayerEditor> Layers; 
         public TileLayers()
         {
-            this.Layers = new List<TileLayer>();
+            this.Layers = new List<TileLayerEditor>();
         }
+    }
+
+    public class TileLayerEditor
+    {
+        public List<Tile> Tiles = new List<Tile>();
+        public ushort RowCountX;
+        public ushort ColCountY;
+        public ushort MatchCount;
     }
 
     static TripleTileGameDesginEditorWindow wnd;
@@ -26,7 +33,14 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
     private ListView listView;
     private Button showAllLayersButton;
     private VisualTreeAsset listViewElement;
-    private Dictionary<int, VisualElement> listViewVisualElementPairs = new Dictionary<int, VisualElement>();
+
+    private IntegerField rowCountField;
+    private IntegerField colCountField;
+
+    private VisualTreeAsset tileButtonGroup;
+    private ScrollView tilesScrollPanel;
+    private bool refreshTilesPanel = true;
+    private List<VisualElement> tileElementList = new List<VisualElement>();
 
 
     [MenuItem("三消遊戲編輯器/TripleTileGameDesginEditorWindow")]
@@ -51,14 +65,31 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         showAllLayersButton = rootVisualElement.Q<Button>("ShowAllLayersButton");
         showAllLayersButton.RegisterCallback<ClickEvent>(onShowAllTileLayersButton);
         listViewElement = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/ListViewElement.uxml");
-
         initListViewPanel();
+
+        tileButtonGroup = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/TileButtonGroup.uxml");
+        tilesScrollPanel = rootVisualElement.Q<ScrollView>("TilesScrollPanel");
+        rowCountField = rootVisualElement.Q<IntegerField>("RowCountField");
+        colCountField = rootVisualElement.Q<IntegerField>("ColCountField");
+        rowCountField.value = 0;
+        colCountField.value = 0;
+        rowCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, true));
+        colCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, false));
+        //DragAndDropManipulator manipulator = new(rootVisualElement.Q<VisualElement>("object"));
+
     }
 
     private void addLayer()
     {
-        tileLayers.Layers.Insert( 0 ,new TileLayer() { RowCountX = 8, ColCountY = 8});
+        int selectId = listView.selectedIndex;
+        tileLayers.Layers.Insert( 0 ,new TileLayerEditor() { RowCountX = 5, ColCountY = 5});
+        if( tileLayers.Layers.Count > 1)
+            refreshTilesPanel = false;
         listView.Rebuild();
+        if(selectId != -1)
+            listView.selectedIndex = selectId + 1;
+        else
+            refreshTilesPanel = true;
     }
 
     private void deleteOnSelectLayer()
@@ -66,24 +97,34 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         var selectedListIndex = listView.selectedIndex;
         if(selectedListIndex < 0)
             return;
-        
+
+        tilesScrollPanel.Clear();
         tileLayers.Layers.RemoveAt(selectedListIndex);
-        listView.Rebuild();
+        listView.Rebuild();  
+        listView.selectedIndex = -1;
     }
 
     private void onImportTempleteButton(ClickEvent _clickEvent)
     {
         if(tileLayersSOObjField.value == null)
             return;
-        Debug.Log("Import Template.");
+
         TileLayersSO tileLayersSO = tileLayersSOObjField.value as TileLayersSO;
         tileLayers.Layers.Clear();
         var layerCount = tileLayersSO.TileLayers.Length;
         for(int index = layerCount - 1; index >= 0; index--)
         {
-            tileLayers.Layers.Add(tileLayersSO.TileLayers[index]);
+            var data = tileLayersSO.TileLayers[index];
+            tileLayers.Layers.Add(new TileLayerEditor
+            {
+                RowCountX = data.RowCountX,
+                ColCountY = data.ColCountY,
+                Tiles = data.Tiles.ToList(),
+                MatchCount = data.MatchCount
+            });
         }
 
+        tilesScrollPanel.Clear();
         listView.Rebuild();
     }
 
@@ -92,8 +133,7 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         listView.itemsSource = tileLayers.Layers;
         listView.makeItem = makeListItem;
         listView.bindItem = bindListItem;
-        //listView.selectionChanged += onClick;
-        listView.itemIndexChanged += listItemIndexChanged;
+        listView.selectionChanged += listOnClick;
     }
 
     private void onShowAllTileLayersButton(ClickEvent _clickEvent)
@@ -117,58 +157,134 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
 
     private int getTileLayerIndex(int _listViewIndex)
     {
-        /*假設有4層
-            0 -> 第四關 tileLayers.Layers.Count
-        */
         return  tileLayers.Layers.Count - _listViewIndex;
     }
 
-    private void unbindListItem(VisualElement _ve, int _index)
+    private void listOnClick(IEnumerable<object> _objs)
     {
-        Debug.Log("unbindList " + _ve.name + " ,index: " + _index);
+        Debug.Log(refreshTilesPanel);
+        if(!refreshTilesPanel)
+        {
+            refreshTilesPanel = true;
+            return;
+        }
+
+        var selectedIndex = listView.selectedIndex;
+       
+        if(selectedIndex >= 0)
+            setTilesPanel(tileLayers.Layers[selectedIndex]);
     }
 
-    private void destroyListItem(VisualElement _ve)
+    void setTilesPanel(TileLayerEditor _layerData)
     {
-        Debug.Log("destroy " + _ve.name);
+        tilesScrollPanel.Clear();
+        VisualElement tilesRoot = new VisualElement();
+        tilesRoot.style.width = _layerData.ColCountY * 65;
+        tilesRoot.style.flexGrow = 0;
+        tilesRoot.style.flexDirection = FlexDirection.Row;
+        tilesRoot.style.flexWrap = Wrap.Wrap;
+        tilesRoot.style.alignItems = Align.FlexEnd;
+        tilesRoot.style.justifyContent = Justify.FlexStart;
+
+        VisualElement content = tilesScrollPanel.Q<VisualElement>("unity-content-container");
+        content.style.flexDirection = FlexDirection.Row;
+        content.style.flexWrap = Wrap.Wrap;
+        content.style.alignItems = Align.Center;
+        content.style.alignSelf = Align.Center;
+        content.style.justifyContent = Justify.Center;
+
+        content = tilesScrollPanel.Q<VisualElement>("unity-content-viewport");
+        content.style.alignSelf = Align.Center;
+
+        int tilesCount = _layerData.RowCountX * _layerData.ColCountY;
+        tileElementList.Clear();
+
+        for(short index = 0; index < tilesCount; index++)
+        {
+            var templateContainer = tileButtonGroup.Instantiate();
+            templateContainer.name = index.ToString();
+            Button btn = templateContainer.Q<Button>("AddTileButton");
+            Button deleteBtn = templateContainer.Q<Button>("DeleteButton");
+            IntegerField idInputField = templateContainer.Q<IntegerField>("IdInputField");
+
+            int tileIndex = index;
+
+            btn.clicked += ()=> onCreateTileButton(tileIndex);
+            deleteBtn.clicked += ()=> onDeleteTileButton(tileIndex);
+
+            tilesRoot.Add(templateContainer);
+            tileElementList.Add(templateContainer);
+        }
+
+        if(_layerData.Tiles.Count > 0)
+        {
+            for(short tileIndex = 0; tileIndex < _layerData.Tiles.Count; tileIndex++)
+            {
+                var index = getTileElementIndex(_layerData.ColCountY, _layerData.Tiles[tileIndex].RowX, _layerData.Tiles[tileIndex].ColY);
+                if(tileElementList.Count > index)
+                {
+                    var element = tileElementList[index];
+                    element.Q<VisualElement>("Tile").style.display = DisplayStyle.Flex;
+                }
+            }
+        }
+
+        tilesScrollPanel.Add(tilesRoot);
+        rowCountField.value = _layerData.RowCountX;
+        colCountField.value = _layerData.ColCountY;
     }
 
-    private void deleteListElement(ClickEvent _clickEvent, int index)
+    private void onCreateTileButton(int _index)
     {
-        Debug.Log("deleteListElement");
+        tileElementList[_index].Q<VisualElement>("Tile").style.display = DisplayStyle.Flex;
+        var layer = tileLayers.Layers[listView.selectedIndex];
+        int row = _index/layer.ColCountY;
+        int col = _index%layer.ColCountY;
+        Tile tile = new Tile();
+        tile.RowX = (ushort)row;
+        tile.ColY = (ushort)col;
+        layer.Tiles.Add(tile);
     }
 
-    private void listViewItemAdd(IEnumerable<int> _index)
+    private void onDeleteTileButton(int _index)
     {
-        Debug.Log("Item Add" + _index.First());
+        tileElementList[_index].Q<VisualElement>("Tile").style.display = DisplayStyle.None;
+        var layer = tileLayers.Layers[listView.selectedIndex];
+
+        int row = _index/layer.ColCountY;
+        int col = _index%layer.ColCountY;
+
+        foreach(var tile in layer.Tiles)
+        {
+            if(tile.RowX == row && tile.ColY == col)
+            {
+                layer.Tiles.Remove(tile);
+            }
+        }
     }
 
-    private void listViewItemRemove(IEnumerable<int> _index)
+    private int getTileElementIndex(int _maxCol, int _row, int _col)
     {
-        Debug.Log("Item Remove " + _index.First());
+        return (_row * _maxCol) + _col;
     }
 
-    private void listItemIndexChanged(int _index1, int _index2)
+    private void limitRowColValue(ChangeEvent<int> _inputValue, bool _isRow)
     {
-        Debug.Log(_index1 + ", " + _index2);
-        // var index1 = getTileLayerIndex(_index1);
-        // var index2 = getTileLayerIndex(_index2);
-        // Debug.Log("轉換" + index1 + ", " + index2);
-        // TileLayer tileLayer = tileLayers.Layers[index2];
-        // tileLayers.Layers[index2] = tileLayers.Layers[index1];
-        // tileLayers.Layers[index1] = tileLayer;
-        //listView.Rebuild();
-    }
+        var value = Mathf.Clamp(_inputValue.newValue, 1, 10);
+        var listIndex = listView.selectedIndex;
+        var field = _isRow? rowCountField: colCountField;
+        field.value = value;
 
-    private void onClick(IEnumerable<object> _objs)
-    {
-        // var selectedIndex = listView.selectedIndex;
-        // var element = listViewVisualElementPairs[selectedIndex];
-        //Debug.Log(onClick);
-    }
+        if(listIndex >= 0)
+        {
+            if(_isRow)
+                tileLayers.Layers[listIndex].RowCountX = (ushort)value;
+            else
+                tileLayers.Layers[listIndex].ColCountY = (ushort)value;
 
-    private void onClick()
-    {
-        Debug.Log("onClick");
+            setTilesPanel(tileLayers.Layers[listIndex]);
+        }
+        
+        listView.Rebuild();
     }
 }

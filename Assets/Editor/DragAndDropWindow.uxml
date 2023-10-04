@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/DragAndDropWindow.uss?fileID=7433441132597879392&amp;guid=2a0476f36996e423abe6fb3882cd858f&amp;type=3#DragAndDropWindow" />
+    <ui:VisualElement name="Root" style="flex-grow: 0; width: 100%; height: 100%;">
+        <ui:VisualElement style="flex-grow: 0; height: 40px; background-color: rgba(245, 255, 0, 0.67);" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement style="flex-grow: 0; width: 60px; background-color: rgb(255, 0, 0);" />
+            <ui:VisualElement style="flex-grow: 1;">
+                <ui:ScrollView mode="Horizontal" name="OjectsSlotScrollView" vertical-scroller-visibility="Hidden" style="height: 80px; flex-direction: column; display: flex; justify-content: flex-start; align-items: stretch;" />
+                <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center; width: 100%; display: flex;">
+                    <ui:VisualElement name="Tiles" style="flex-grow: 0; align-items: center; justify-content: flex-start; flex-wrap: wrap; flex-direction: row; width: 360px; align-self: auto;">
+                        <ui:VisualElement name="slot1" class="slot" />
+                        <ui:VisualElement name="slot2" class="slot" />
+                        <ui:VisualElement name="slot3" class="slot" />
+                        <ui:VisualElement name="slot4" class="slot" />
+                        <ui:VisualElement name="slot5" class="slot" />
+                        <ui:VisualElement name="slot6" class="slot" />
+                        <ui:VisualElement name="slot7" class="slot" />
+                        <ui:VisualElement name="slot8" class="slot" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
