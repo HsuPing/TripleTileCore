@@ -5,16 +5,18 @@ using UnityEngine.UIElements;
 
 public class DragAndDropManipulator : PointerManipulator
 {
-    public DragAndDropManipulator(VisualElement target, VisualElement root, Action moveSlotCallback)
+    public DragAndDropManipulator(DragAndDropController _controller, VisualElement target, VisualElement root, int id, bool onDefautSlot = true)
     {
+        this.controller = _controller;
         this.target = target;
         this.root = root;
+        this.TileID = id;
         parent = this.target.parent;
+        this.onDefautSlot = onDefautSlot;
     }
 
     protected override void RegisterCallbacksOnTarget()
     {
-        // 註冊點擊拖曳事件
         target.RegisterCallback<PointerDownEvent>(PointerDownHandler);
         target.RegisterCallback<PointerMoveEvent>(PointerMoveHandler);
         target.RegisterCallback<PointerUpEvent>(PointerUpHandler);
@@ -28,12 +30,14 @@ public class DragAndDropManipulator : PointerManipulator
         target.UnregisterCallback<PointerUpEvent>(PointerUpHandler);
         target.UnregisterCallback<PointerCaptureOutEvent>(PointerCaptureOutHandler);
     }
-
+    
+    public int TileID { get; }
     private const short editor_top_bar_height = 21;
     private const string slot_class_name = "slot";
 
     private Vector2 targetStartPosition { get; set; }
     private Vector3 pointerStartPosition { get; set; }
+    private DragAndDropController controller { get;}
 
     private bool enabled { get; set; }
     private bool onDefautSlot { get; set; } = true;
@@ -46,8 +50,8 @@ public class DragAndDropManipulator : PointerManipulator
     /// </summary>
     private void PointerDownHandler(PointerDownEvent evt)
     {
-        var localToWorldPos = target.LocalToWorld(target.transform.position);
-        targetStartPosition = new Vector2(localToWorldPos.x, localToWorldPos.y - editor_top_bar_height);
+        var pos = root.WorldToLocal(target.LocalToWorld(target.transform.position));
+        targetStartPosition = new Vector2(pos.x, pos.y);
         pointerStartPosition = evt.position;
         target.CapturePointer(evt.pointerId);
         root.Add(this.target);
@@ -64,8 +68,8 @@ public class DragAndDropManipulator : PointerManipulator
         {
             Vector3 pointerDelta = evt.position - pointerStartPosition;
             target.transform.position = new Vector2(
-                Mathf.Max(0, targetStartPosition.x + pointerDelta.x),
-                Mathf.Max(0, targetStartPosition.y + pointerDelta.y));
+                Mathf.Clamp(targetStartPosition.x + pointerDelta.x ,0 , root.worldBound.width - target.layout.width),
+                Mathf.Clamp(targetStartPosition.y + pointerDelta.y ,0 , root.worldBound.height - target.layout.height));
         }
     }
 
@@ -92,10 +96,20 @@ public class DragAndDropManipulator : PointerManipulator
             VisualElement closestOverlappingSlot = FindClosestSlot(allSlots);
             if(closestOverlappingSlot != null)
             {
+                if(closestOverlappingSlot.childCount > 0)
+                {
+                    closestOverlappingSlot.RemoveAt(0);
+                }
+
+                // int putIndex = root.IndexOf(closestOverlappingSlot);
+                // Debug.Log("Add Index: " + putIndex);
                 closestOverlappingSlot.Add(this.target);
                 this.parent = closestOverlappingSlot;
-                //建立新的物件在default_slot                                
-                onDefautSlot = false;
+                //controller.DragInSlotCallback?.Invoke(putIndex, TileID);  //TODO
+                if(onDefautSlot)
+                {                   
+                    onDefautSlot = false;
+                }
             }
             else
             {
@@ -103,8 +117,8 @@ public class DragAndDropManipulator : PointerManipulator
                     parent.Add(this.target);
                 else
                 {
-                    target.parent.Remove(this.target);
-                    UnregisterCallbacksFromTarget();
+                    //TODO
+                    target.RemoveFromHierarchy();
                 }
             }
 

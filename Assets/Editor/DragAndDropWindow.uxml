@@ -4,7 +4,7 @@
         <ui:VisualElement style="flex-grow: 0; height: 40px; background-color: rgba(245, 255, 0, 0.67);" />
         <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
             <ui:VisualElement style="flex-grow: 0; width: 60px; background-color: rgb(255, 0, 0);" />
-            <ui:VisualElement style="flex-grow: 1;">
+            <ui:VisualElement name="DragAndDropRoot" style="flex-grow: 1;">
                 <ui:ScrollView mode="Horizontal" name="OjectsSlotScrollView" vertical-scroller-visibility="Hidden" style="height: 80px; flex-direction: column; display: flex; justify-content: flex-start; align-items: stretch;" />
                 <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center; width: 100%; display: flex;">
                     <ui:VisualElement name="Tiles" style="flex-grow: 0; align-items: center; justify-content: flex-start; flex-wrap: wrap; flex-direction: row; width: 360px; align-self: auto;">

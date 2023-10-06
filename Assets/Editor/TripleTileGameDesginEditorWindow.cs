@@ -29,10 +29,10 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
     private VisualTreeAsset m_VisualTreeAsset = default;
     private TileLayers tileLayers;
     private ObjectField tileLayersSOObjField;
+    private LayerListViewController layerListViewController;
+    private TileGroupController tileGroupController;
 
     private ListView listView;
-    private Button showAllLayersButton;
-    private VisualTreeAsset listViewElement;
 
     private IntegerField rowCountField;
     private IntegerField colCountField;
@@ -41,10 +41,12 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
     private ScrollView tilesScrollPanel;
     private bool refreshTilesPanel = true;
     private List<VisualElement> tileElementList = new List<VisualElement>();
+    private DragAndDropController dragAndDropController;
+    TileSpritesForEditorSO tileSpritesForEditorSO;
 
 
     [MenuItem("三消遊戲編輯器/TripleTileGameDesginEditorWindow")]
-    public static void ShowExample()
+    public static void ShowWindow()
     {
         wnd = GetWindow<TripleTileGameDesginEditorWindow>();
         wnd.titleContent = new GUIContent("三消遊戲編輯器");
@@ -53,55 +55,63 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
     public void CreateGUI()
     {
         m_VisualTreeAsset.CloneTree(rootVisualElement);
+
         tileLayers = new TileLayers();
         tileLayersSOObjField = rootVisualElement.Q<ObjectField>("TileLayersSO");
         tileLayersSOObjField.objectType = typeof(TileLayersSO); 
         rootVisualElement.Q<Button>("ImportButton").RegisterCallback<ClickEvent>(onImportTempleteButton);
+        tileSpritesForEditorSO = AssetDatabase.LoadAssetAtPath<TileSpritesForEditorSO>("Assets/Editor/TileSpritesForEditorSO.asset");
 
-        rootVisualElement.Q<Button>("AddLayerButton").clickable.clicked += addLayer;
-        rootVisualElement.Q<Button>("RemoveSelectedLayerButton").clickable.clicked += deleteOnSelectLayer;
-        listView = rootVisualElement.Q<ListView>("ListView");
+        layerListViewController = new LayerListViewController(new LayerListViewControllerModel()
+        {
+            RootElemnt = rootVisualElement.Q<VisualElement>("LayerListView"),
+            ItemSource = tileLayers.Layers,
+            GetLayerInfoCallback = getLayerInfo,
+            ListItemClickCallback = setTilePanel,
+            AddLayerCallback = addTileLayerData,
+            RemoveLayerCallback = removeTileLayerDate
+        });
 
-        showAllLayersButton = rootVisualElement.Q<Button>("ShowAllLayersButton");
-        showAllLayersButton.RegisterCallback<ClickEvent>(onShowAllTileLayersButton);
-        listViewElement = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/ListViewElement.uxml");
-        initListViewPanel();
+        tileGroupController = new TileGroupController(new TileGroupControllerModel()
+        {
+            RootElement = rootVisualElement.Q<VisualElement>("TileGroup"),
+            DragAndDropSprites = tileSpritesForEditorSO.TileSprites,
 
-        tileButtonGroup = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/TileButtonGroup.uxml");
-        tilesScrollPanel = rootVisualElement.Q<ScrollView>("TilesScrollPanel");
-        rowCountField = rootVisualElement.Q<IntegerField>("RowCountField");
-        colCountField = rootVisualElement.Q<IntegerField>("ColCountField");
-        rowCountField.value = 0;
-        colCountField.value = 0;
-        rowCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, true));
-        colCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, false));
-        //DragAndDropManipulator manipulator = new(rootVisualElement.Q<VisualElement>("object"));
+        });
 
-    }
 
-    private void addLayer()
-    {
-        int selectId = listView.selectedIndex;
-        tileLayers.Layers.Insert( 0 ,new TileLayerEditor() { RowCountX = 5, ColCountY = 5});
-        if( tileLayers.Layers.Count > 1)
-            refreshTilesPanel = false;
-        listView.Rebuild();
-        if(selectId != -1)
-            listView.selectedIndex = selectId + 1;
-        else
-            refreshTilesPanel = true;
-    }
 
-    private void deleteOnSelectLayer()
-    {
-        var selectedListIndex = listView.selectedIndex;
-        if(selectedListIndex < 0)
-            return;
+        // tileGroupController = new TileGroupController(new TileGroupControllerModel()
+        // {
+        //     PanelRoot = rootVisualElement.Q<VisualElement>("TileGroup"),
+        // });
+        
+        // tileButtonGroup = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/TileButtonGroup.uxml");
+        // tilesScrollPanel = rootVisualElement.Q<ScrollView>("TilesScrollPanel");
+        // rowCountField = rootVisualElement.Q<IntegerField>("RowCountField");
+        // colCountField = rootVisualElement.Q<IntegerField>("ColCountField");
+        // rowCountField.value = 0;
+        // colCountField.value = 0;
+        // rowCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, true));
+        // colCountField.RegisterValueChangedCallback((evt) => limitRowColValue(evt, false));
+        // //DragAndDropManipulator manipulator = new(rootVisualElement.Q<VisualElement>("object"));
+        // tileSpritesForEditorSO = AssetDatabase.LoadAssetAtPath<TileSpritesForEditorSO>("Assets/Editor/TileSpritesForEditorSO.asset");
+        // ScrollView dragAndDropDefaultScroll = rootVisualElement.Q<ScrollView>("DefaultSlotsScrollView");
+        // VisualElement element = new VisualElement();
+        // element.AddToClassList("draggable-object-default-slot");
+        // dragAndDropDefaultScroll.Add(element);
 
-        tilesScrollPanel.Clear();
-        tileLayers.Layers.RemoveAt(selectedListIndex);
-        listView.Rebuild();  
-        listView.selectedIndex = -1;
+    //     dragAndDropController = new DragAndDropController(new DragAndDropControllerModel()
+    //     {
+    //         ScrollView = dragAndDropDefaultScroll,
+    //         ItemSprites = tileSpritesForEditorSO.TileSprites,
+    //         SearchSlotRoot = rootVisualElement.Q<VisualElement>("TilesPanel"),
+    //         DefaultSlotClassName = "draggable-object-default-slot",
+    //         DraggableObjectClassName = "draggable-object",
+    //         SlotClassName = "slot",
+    //         DragInSlotCallback = setTileID,
+    //         RemoveFromSlotCallback = removeTileId
+    //     });
     }
 
     private void onImportTempleteButton(ClickEvent _clickEvent)
@@ -128,57 +138,16 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         listView.Rebuild();
     }
 
-    private void initListViewPanel()
-    {
-        listView.itemsSource = tileLayers.Layers;
-        listView.makeItem = makeListItem;
-        listView.bindItem = bindListItem;
-        listView.selectionChanged += listOnClick;
-    }
-
-    private void onShowAllTileLayersButton(ClickEvent _clickEvent)
-    {
-        listView.selectedIndex = -1;
-    }
-
-    private VisualElement makeListItem()
-    {
-       TemplateContainer templateContainer = listViewElement.Instantiate();
-       return templateContainer;
-    }
-
-    private void bindListItem(VisualElement _ve, int _index)
-    {
-        Label label = _ve.Q<Label>("LabelContent");
-        var data = tileLayers.Layers[_index];
-        //Debug.Log("list index: " + _index + ", tileLayerIndex: " + tileLayerIndex + ", row: " + data.RowCountX + ", col: " + data.ColCountY);
-        label.text = string.Format("第 {0} 層\n行: {1}, 列: {2}", getTileLayerIndex(_index), data.RowCountX, data.ColCountY);
-    }
-
     private int getTileLayerIndex(int _listViewIndex)
     {
         return  tileLayers.Layers.Count - _listViewIndex;
-    }
-
-    private void listOnClick(IEnumerable<object> _objs)
-    {
-        Debug.Log(refreshTilesPanel);
-        if(!refreshTilesPanel)
-        {
-            refreshTilesPanel = true;
-            return;
-        }
-
-        var selectedIndex = listView.selectedIndex;
-       
-        if(selectedIndex >= 0)
-            setTilesPanel(tileLayers.Layers[selectedIndex]);
     }
 
     void setTilesPanel(TileLayerEditor _layerData)
     {
         tilesScrollPanel.Clear();
         VisualElement tilesRoot = new VisualElement();
+        tilesRoot.name = "TilesRoot";
         tilesRoot.style.width = _layerData.ColCountY * 65;
         tilesRoot.style.flexGrow = 0;
         tilesRoot.style.flexDirection = FlexDirection.Row;
@@ -205,7 +174,8 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
             templateContainer.name = index.ToString();
             Button btn = templateContainer.Q<Button>("AddTileButton");
             Button deleteBtn = templateContainer.Q<Button>("DeleteButton");
-            IntegerField idInputField = templateContainer.Q<IntegerField>("IdInputField");
+            VisualElement tile = templateContainer.Q<VisualElement>("Tile");
+            tile.AddToClassList("slot");
 
             int tileIndex = index;
 
@@ -220,11 +190,14 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         {
             for(short tileIndex = 0; tileIndex < _layerData.Tiles.Count; tileIndex++)
             {
-                var index = getTileElementIndex(_layerData.ColCountY, _layerData.Tiles[tileIndex].RowX, _layerData.Tiles[tileIndex].ColY);
+                var tileData = _layerData.Tiles[tileIndex];
+                var index = getTileElementIndex(_layerData.ColCountY, tileData.RowX, tileData.ColY);
                 if(tileElementList.Count > index)
                 {
                     var element = tileElementList[index];
-                    element.Q<VisualElement>("Tile").style.display = DisplayStyle.Flex;
+                    element.Q<VisualElement>("TilePanel").style.display = DisplayStyle.Flex;
+                    if(tileData.Id > 0)
+                        element.Q<VisualElement>("Tile").Add(dragAndDropController.CreateNewDragObject(tileData.Id));
                 }
             }
         }
@@ -236,7 +209,7 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
 
     private void onCreateTileButton(int _index)
     {
-        tileElementList[_index].Q<VisualElement>("Tile").style.display = DisplayStyle.Flex;
+        tileElementList[_index].Q<VisualElement>("TilePanel").style.display = DisplayStyle.Flex;
         var layer = tileLayers.Layers[listView.selectedIndex];
         int row = _index/layer.ColCountY;
         int col = _index%layer.ColCountY;
@@ -248,7 +221,7 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
 
     private void onDeleteTileButton(int _index)
     {
-        tileElementList[_index].Q<VisualElement>("Tile").style.display = DisplayStyle.None;
+        tileElementList[_index].Q<VisualElement>("TilePanel").style.display = DisplayStyle.None;
         var layer = tileLayers.Layers[listView.selectedIndex];
 
         int row = _index/layer.ColCountY;
@@ -259,6 +232,7 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
             if(tile.RowX == row && tile.ColY == col)
             {
                 layer.Tiles.Remove(tile);
+                break;
             }
         }
     }
@@ -286,5 +260,61 @@ public class TripleTileGameDesginEditorWindow : EditorWindow
         }
         
         listView.Rebuild();
+    }
+
+    private void removeTileId(int _index)
+    {
+        var layer = tileLayers.Layers[listView.selectedIndex];
+        int row = _index/layer.ColCountY;
+        int col = _index%layer.ColCountY;
+
+        foreach(var tile in layer.Tiles)
+        {
+            if(tile.RowX == row && tile.ColY == col)
+            {
+                tile.Id = 0;
+                break;
+            }
+        }
+    }
+
+    private void setTileID(int _index, int _id)
+    {
+        var layer = tileLayers.Layers[listView.selectedIndex];
+        int row = _index/layer.ColCountY;
+        int col = _index%layer.ColCountY;
+
+        foreach(var tile in layer.Tiles)
+        {
+            if(tile.RowX == row && tile.ColY == col)
+            {
+                tile.Id = (ushort)_id;
+                break;
+            }
+        }
+    }
+
+    //ListView Callback
+    private string getLayerInfo(int _index)
+    {
+        var data = tileLayers.Layers[_index];
+        return string.Format("第 {0} 層\n行: {1}, 列: {2}", getTileLayerIndex(_index), data.RowCountX, data.ColCountY);
+    }
+
+    private void setTilePanel(int _index)
+    {
+        Debug.Log("Set Tile Panel: " + _index);
+        var data = tileLayers.Layers[_index];
+        tileGroupController.SetGrid(data.RowCountX, data.ColCountY);
+    }
+    private void addTileLayerData()
+    {
+        tileLayers.Layers.Insert( 0 ,new TileLayerEditor() { RowCountX = 4, ColCountY = 5});
+    }
+
+    private void removeTileLayerDate(int _index)
+    {
+        //TODO: 清除TilePannel
+        tileLayers.Layers.RemoveAt(_index);
     }
 }
