@@ -20,6 +20,14 @@ public class TripleTileController : MonoBehaviour
 
     private void Start() 
     {
+        #if UNITY_EDITOR
+        var mediator = UnityEditor.AssetDatabase.LoadAssetAtPath<TripleTileGameDesginEditorMediatorSO>("Assets/Editor/TripleTileGameDesginEditorMediator.asset");
+        if(mediator.PlayDemo)
+        {
+            tileLayersSO = UnityEditor.AssetDatabase.LoadAssetAtPath<TileLayersSO>(mediator.DemoDataPath);
+            mediator.PlayDemo = false;
+        }
+        #endif
         if(tileLayersSO != null && tileLayersSO.TileLayers != null)
         {
             instantiateTiles();

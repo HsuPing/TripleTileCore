@@ -504,7 +504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1540484740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cd6521593cc43cfbda0265a0bf65cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileLayersSO: {fileID: 11400000, guid: c84193ee4fc2645678350a156100e5c8, type: 2}
+  tileLayersSO: {fileID: 0}
   tileCellPrefab: {fileID: 4117159840669240661, guid: 5f217e60620864ffb8bde3480e8412e9, type: 3}
   tileInstantiateTrans: {fileID: 1540484741}
   tileYMargin: 0.15

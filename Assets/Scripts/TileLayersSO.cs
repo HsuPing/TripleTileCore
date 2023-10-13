@@ -12,7 +12,6 @@ public class TileLayer
     public Tile[] Tiles;
     public ushort RowCountX;
     public ushort ColCountY;
-    public ushort MatchCount;
 }
 
 [System.Serializable]

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class LayerListViewController
 {
+    public int GetLayerIndex => selectedListIndex;
     private VisualTreeAsset listElement { get;}
     private ListView listView { get;}
     private Button addLayerButton { get;}
@@ -39,6 +40,13 @@ public class LayerListViewController
         listView.bindItem = bindListItem;
         listView.itemsSource = _model.ItemSource;
         listView.selectionChanged += listOnClick;
+    }
+
+    public void Rebuild(int _selectIndex = int.MaxValue)
+    {
+        if(_selectIndex != int.MaxValue)
+            setSelectIndex(_selectIndex);
+        listView.Rebuild();
     }
 
     private VisualElement makeListItem()

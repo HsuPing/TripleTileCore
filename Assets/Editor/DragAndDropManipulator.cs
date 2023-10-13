@@ -96,28 +96,38 @@ public class DragAndDropManipulator : PointerManipulator
             VisualElement closestOverlappingSlot = FindClosestSlot(allSlots);
             if(closestOverlappingSlot != null)
             {
+                if(closestOverlappingSlot == parent)
+                    return;
+
                 if(closestOverlappingSlot.childCount > 0)
                 {
+                    controller.RemoveFromSlotCallback(closestOverlappingSlot);
                     closestOverlappingSlot.RemoveAt(0);
                 }
 
-                // int putIndex = root.IndexOf(closestOverlappingSlot);
-                // Debug.Log("Add Index: " + putIndex);
-                closestOverlappingSlot.Add(this.target);
-                this.parent = closestOverlappingSlot;
-                //controller.DragInSlotCallback?.Invoke(putIndex, TileID);  //TODO
                 if(onDefautSlot)
                 {                   
                     onDefautSlot = false;
+                    controller.CreateDefaultTile(TileID);
                 }
+                else
+                {
+                    controller.RemoveFromSlotCallback(parent);
+                }
+
+                closestOverlappingSlot.Add(this.target);
+                parent = closestOverlappingSlot;
+                controller.DragInSlotCallback(parent, TileID);  
             }
             else
             {
                 if(onDefautSlot)
+                {
                     parent.Add(this.target);
+                }
                 else
                 {
-                    //TODO
+                    controller.RemoveFromSlotCallback(parent);  
                     target.RemoveFromHierarchy();
                 }
             }
