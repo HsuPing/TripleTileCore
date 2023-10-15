@@ -137,9 +137,9 @@ namespace TripleTileGameDesginEditor
             for(short index = 0; index < _dataList.Count; index++)
             {
                 var tileData = _dataList[index];
-                var tileIndex = TripleTileGameDesginProcesser.GetTileElementIndex(_maxCol, tileData.RowX, tileData.ColY);
+                var tileIndex = TripleTileGameDesginProcesser.GetTileElementIndex(_maxCol, tileData.RowY, tileData.ColX);
 
-                if(tileData.RowX <= _maxRow - 1 && tileData.ColY <= _maxCol - 1)
+                if(tileData.RowY <= _maxRow - 1 && tileData.ColX <= _maxCol - 1)
                 {
                     var element = tileElementList[tileIndex];
                     element.OpenPanelActive(true);

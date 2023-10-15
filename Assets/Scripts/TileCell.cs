@@ -5,27 +5,40 @@ using UnityEngine.Events;
 
 public class TileCell : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer tileSpriteRenderer;
+    [SerializeField] private SpriteRenderer iconSpriteRenderer;
     [SerializeField] private BoxCollider2D boxCollider;
     [SerializeField] private EventTrigger eventTrigger; 
     [SerializeField] private Tile tile;
     [SerializeField] private int blockCellCount = 0;
     private Action<TileCell> onClickCallback;
-    public SpriteRenderer SpriteRenderer => spriteRenderer;
+    public SpriteRenderer TileSpriteRenderer => tileSpriteRenderer;
     public ushort Id => tile.Id;
     public UnityEvent RemoveEvent;
 
     public void SetData(Tile _tile, int _order, Action<TileCell> _callback)
     {
         tile = _tile;
-        spriteRenderer.sortingOrder = _order;
+        tileSpriteRenderer.sortingOrder = _order;
+        iconSpriteRenderer.sortingOrder = _order;
         onClickCallback = _callback;
+    }
+
+    public void SetIcon(Sprite _sprite)
+    {
+        iconSpriteRenderer.sprite = _sprite;
+    }
+
+    public void SetId(ushort _id)
+    {
+        tile.Id = _id;
     }
 
     public void SetBlockState()
     {
         bool block = blockCellCount > 0;
-        spriteRenderer.color = block ? Color.gray: Color.white;
+        tileSpriteRenderer.color = block ? Color.gray: Color.white;
+        iconSpriteRenderer.color = block ? Color.gray: Color.white;
         TriggerEnable(!block);
     }
 
@@ -59,7 +72,8 @@ public class TileCell : MonoBehaviour
         if(blockCellCount <= 0)
         {
             TriggerEnable(true);
-            spriteRenderer.color = Color.white;
+            tileSpriteRenderer.color = Color.white;
+            iconSpriteRenderer.color = Color.white;
         }
     }
 
@@ -81,7 +95,7 @@ public class TileCell : MonoBehaviour
 
     void OnDrawGizmos() 
     {
-        if(spriteRenderer.color == Color.white)
+        if(tileSpriteRenderer.color == Color.white)
         {
             GUI.color = Color.red;
             UnityEditor.Handles.Label(this.transform.position, Id.ToString());

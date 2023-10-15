@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93288622cb15448aeb76c8a36f891f5f, type: 3}
-  m_Name: PlayDemoStageData
+  m_Name: 202343151054
   m_EditorClassIdentifier: 
   TileLayers:
   - Tiles:
@@ -41,7 +41,7 @@ MonoBehaviour:
     - Id: 0
       RowY: 0
       ColX: 3
-    - Id: 2
+    - Id: 0
       RowY: 0
       ColX: 2
     - Id: 0
@@ -52,4 +52,3 @@ MonoBehaviour:
       ColX: 2
     ColCountX: 5
     RowCountY: 4
-  DifferentIdCount: 2

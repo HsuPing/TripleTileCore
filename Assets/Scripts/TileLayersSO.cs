@@ -4,20 +4,21 @@ using UnityEngine;
 public class TileLayersSO : ScriptableObject
 {
     public TileLayer[] TileLayers;
+    public ushort DifferentIdCount;
 }
 
 [System.Serializable]
 public class TileLayer
 {
     public Tile[] Tiles;
-    public ushort RowCountX;
-    public ushort ColCountY;
+    public ushort ColCountX;
+    public ushort RowCountY;
 }
 
 [System.Serializable]
 public class Tile
 {
     public ushort Id;
-    public ushort RowX;
-    public ushort ColY;
+    public ushort RowY;
+    public ushort ColX;
 }

@@ -12,9 +12,8 @@ namespace TripleTileGameDesginEditor
     public class TileLayerEditor
     {
         public List<Tile> Tiles = new List<Tile>();
-        public ushort RowCountX;
-        public ushort ColCountY;
-        public ushort MatchCount;
+        public ushort RowCountY;
+        public ushort ColCountX;
     }
 
     public static class TripleTileGameDesginProcesser
@@ -134,8 +133,8 @@ namespace TripleTileGameDesginEditor
                 var data = tileLayersSO.TileLayers[index];
                 tileLayers.Layers.Add(new TileLayerEditor
                 {
-                    RowCountX = data.RowCountX,
-                    ColCountY = data.ColCountY,
+                    RowCountY = data.RowCountY,
+                    ColCountX = data.ColCountX,
                     Tiles = data.Tiles.ToList(),
                 });
             }
@@ -172,21 +171,25 @@ namespace TripleTileGameDesginEditor
 
         private TileLayersSO exportSO(string _outputPath)
         {
-            TileLayersSO tileLayersSO = ScriptableObject.CreateInstance<TileLayersSO>();
+            TileLayersSO tileLayersSO = CreateInstance<TileLayersSO>();
             tileLayersSO.TileLayers = new TileLayer[tileLayers.Layers.Count];
             int layerSOIndex = 0;
+            int totalTilesCount = 0;
 
             for(int index = tileLayers.Layers.Count - 1; index >= 0; index--)
             {
                 var layerData = tileLayers.Layers[index];
-                tileLayersSO.TileLayers[layerSOIndex] = new TileLayer();
-                tileLayersSO.TileLayers[layerSOIndex].Tiles = layerData.Tiles.ToArray();
-
-                tileLayersSO.TileLayers[layerSOIndex].RowCountX = layerData.RowCountX;
-                tileLayersSO.TileLayers[layerSOIndex].ColCountY = layerData.ColCountY;
+                tileLayersSO.TileLayers[layerSOIndex] = new TileLayer
+                {
+                    Tiles = layerData.Tiles.ToArray(),
+                    RowCountY = layerData.RowCountY,
+                    ColCountX = layerData.ColCountX
+                };
                 layerSOIndex += 1;
+                totalTilesCount += layerData.Tiles.Count;
             }
             string path = _outputPath;
+            tileLayersSO.DifferentIdCount = (ushort)(totalTilesCount / 6);
 
             AssetDatabase.CreateAsset(tileLayersSO, path);
             AssetDatabase.SaveAssets();
@@ -203,7 +206,7 @@ namespace TripleTileGameDesginEditor
             for(short index = 0; index < tileLayers.Layers.Count; index++)
             {
                 var tiles = tileLayers.Layers[index];
-                tiles.Tiles.RemoveAll((t) => t.RowX >= tiles.RowCountX || t.ColY >= tiles.ColCountY);
+                tiles.Tiles.RemoveAll((t) => t.RowY >= tiles.RowCountY || t.ColX >= tiles.ColCountX);
             }
 
             layerListViewController.Rebuild(-1);
@@ -258,18 +261,18 @@ namespace TripleTileGameDesginEditor
             var data = tileLayers.Layers[_index];
             return string.Format("第 {0} 層\n行: {1}, 列: {2}"
             , TripleTileGameDesginProcesser.GetTileLayerIndex(tileLayers.Layers.Count, _index)
-            , data.RowCountX, data.ColCountY);
+            , data.RowCountY, data.ColCountX);
         }
 
         private void setTilePanel(int _index)
         {
             var data = tileLayers.Layers[_index];
-            tileGroupController.SetGrid(data.RowCountX, data.ColCountY);
-            tileGroupController.SetData(data.Tiles, data.RowCountX, data.ColCountY);
+            tileGroupController.SetGrid(data.RowCountY, data.ColCountX);
+            tileGroupController.SetData(data.Tiles, data.RowCountY, data.ColCountX);
         }
         private void addTileLayerData()
         {
-            tileLayers.Layers.Insert( 0 ,new TileLayerEditor() { RowCountX = 4, ColCountY = 5});
+            tileLayers.Layers.Insert( 0 ,new TileLayerEditor() { RowCountY = 4, ColCountX = 5});
         }
 
         private void removeTileLayerDate(int _index)
@@ -283,9 +286,11 @@ namespace TripleTileGameDesginEditor
         private void onCreateTileButton(int _index)
         {
             var dataSet = getLayerRowCol(_index);
-            Tile tile = new Tile();
-            tile.RowX = (ushort)dataSet.Item2;
-            tile.ColY = (ushort)dataSet.Item3;
+            Tile tile = new Tile
+            {
+                RowY = (ushort)dataSet.Item2,
+                ColX = (ushort)dataSet.Item3
+            };
             dataSet.Item1.Tiles.Add(tile);
             tileGroupController.SetTileCountAmount(0, getActiveTilesAmoutn());
         }
@@ -296,7 +301,7 @@ namespace TripleTileGameDesginEditor
 
             foreach(var tile in dataSet.Item1.Tiles)
             {
-                if(tile.RowX == dataSet.Item2 && tile.ColY == dataSet.Item3)
+                if(tile.RowY == dataSet.Item2 && tile.ColX == dataSet.Item3)
                 {
                     dataSet.Item1.Tiles.Remove(tile);
                     tileGroupController.SetTileCountAmount(tile.Id, getIdAmount(tile.Id));
@@ -313,7 +318,7 @@ namespace TripleTileGameDesginEditor
             
             foreach(var tile in dataSet.Item1.Tiles)
             {
-                if(tile.RowX == dataSet.Item2 && tile.ColY == dataSet.Item3)
+                if(tile.RowY == dataSet.Item2 && tile.ColX == dataSet.Item3)
                 {
                     tile.Id = (ushort)_id;
                     break;
@@ -330,17 +335,17 @@ namespace TripleTileGameDesginEditor
             bool refresh = false;
             if(_isRow)
             {
-                if(layer.RowCountX != _value)
+                if(layer.RowCountY != _value)
                 {
-                    layer.RowCountX = (ushort)_value;
+                    layer.RowCountY = (ushort)_value;
                     refresh = true;
                 }
             }
             else
             {
-                if(layer.ColCountY != _value)
+                if(layer.ColCountX != _value)
                 {
-                    layer.ColCountY = (ushort)_value;
+                    layer.ColCountX = (ushort)_value;
                     refresh = true;
                 }
             }
@@ -361,7 +366,7 @@ namespace TripleTileGameDesginEditor
             {
                 foreach(var tile in layer.Tiles)
                 {
-                    if(tile.RowX >= layer.RowCountX || tile.ColY >= layer.ColCountY)
+                    if(tile.RowY >= layer.RowCountY || tile.ColX >= layer.ColCountX)
                         continue;
                     if(!amountDic.ContainsKey(tile.Id))
                         amountDic.Add(tile.Id, 0);
@@ -398,7 +403,7 @@ namespace TripleTileGameDesginEditor
             {
                 foreach(var tile in layer.Tiles)
                 {
-                    if(tile.RowX >= layer.RowCountX || tile.ColY >= layer.ColCountY)
+                    if(tile.RowY >= layer.RowCountY || tile.ColX >= layer.ColCountX)
                         continue;
                     amount += 1;
                 }
@@ -410,8 +415,8 @@ namespace TripleTileGameDesginEditor
         private (TileLayerEditor ,int, int) getLayerRowCol(int _index)
         {
             var layer = tileLayers.Layers[layerListViewController.GetLayerIndex];
-            int row = _index/layer.ColCountY;
-            int col = _index%layer.ColCountY;
+            int row = _index/layer.ColCountX;
+            int col = _index%layer.ColCountX;
             return (layer, row, col);
         }
     }

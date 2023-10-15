@@ -48,13 +48,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbaa4987594540e69afc156be685bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 245109266003246937}
+  tileSpriteRenderer: {fileID: 245109266003246937}
+  iconSpriteRenderer: {fileID: 7820524797480504934}
   boxCollider: {fileID: -2048029295506196930}
   eventTrigger: {fileID: 7300330576525324634}
   tile:
     Id: 0
-    RowX: 0
-    ColY: 0
+    RowY: 0
+    ColX: 0
   blockCellCount: 0
   RemoveEvent:
     m_PersistentCalls:

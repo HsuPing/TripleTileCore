@@ -11,7 +11,6 @@ public class DragAndDropWindow : EditorWindow
     List<VisualElement> tileSlotsList = new List<VisualElement>();
     DragAndDropController dragAndDropController;
 
-    [MenuItem("三消遊戲編輯器/Drag And Drop")]
     public static void ShowExample()
     {
         DragAndDropWindow wnd = GetWindow<DragAndDropWindow>();
