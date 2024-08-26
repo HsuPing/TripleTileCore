@@ -1,0 +1,418 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c81e956a8a54d5790c0b2d7a1d7132, type: 3}
+  m_Name: stage_012
+  m_EditorClassIdentifier: 
+  TileLayers:
+  - Tiles:
+    - ID: 0
+      RowY: 0
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 0
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 1
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 6
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 7
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 2
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 3
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 4
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 5
+      ColX: 6
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 0
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 1
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 2
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 3
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 4
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 5
+      Layer: 1
+    - ID: 0
+      RowY: 8
+      ColX: 6
+      Layer: 1
+    ColCountX: 7
+    RowCountY: 9
+  - Tiles:
+    - ID: 0
+      RowY: 0
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 0
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 0
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 0
+      ColX: 4
+      Layer: 2
+    - ID: 0
+      RowY: 1
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 1
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 1
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 1
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 4
+      Layer: 2
+    - ID: 0
+      RowY: 2
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 3
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 3
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 3
+      ColX: 4
+      Layer: 2
+    - ID: 0
+      RowY: 3
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 4
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 4
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 4
+      ColX: 4
+      Layer: 2
+    - ID: 0
+      RowY: 4
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 4
+      Layer: 2
+    - ID: 0
+      RowY: 5
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 6
+      ColX: 0
+      Layer: 2
+    - ID: 0
+      RowY: 6
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 6
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 6
+      ColX: 5
+      Layer: 2
+    - ID: 0
+      RowY: 7
+      ColX: 1
+      Layer: 2
+    - ID: 0
+      RowY: 7
+      ColX: 2
+      Layer: 2
+    - ID: 0
+      RowY: 7
+      ColX: 3
+      Layer: 2
+    - ID: 0
+      RowY: 7
+      ColX: 4
+      Layer: 2
+    ColCountX: 6
+    RowCountY: 8
+  TotalIDAmount: 6

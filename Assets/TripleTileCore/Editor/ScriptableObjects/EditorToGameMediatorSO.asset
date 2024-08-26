@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a897beeb9725f40159fd2fd740afb86c, type: 3}
+  m_Name: EditorToGameMediatorSO
+  m_EditorClassIdentifier: 
+  PlayDemo: 1
+  DemoScene: {fileID: 102900000, guid: d9ceb0436ee7c41da97b67bce086e1e9, type: 3}
+  PlayDemoStageData: {fileID: 11400000, guid: fb6ecf870cd5648f59d015307df00648, type: 2}
+  DataOutputPath: Assets/TripleTileCore/StageDataExport/{0}.asset
